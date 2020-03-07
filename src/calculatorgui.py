@@ -16,8 +16,16 @@ class RentalCalculatorGUI:
         self.logFileLabelGroup = None
         self.logFileLabel = None
         self.optionsSelectGroup = None
+        self.carTypeCombobox = None
+        self.carTypeLabel = None
+        self.calculateRentalButton = None
+        self.calculatedRentalGrp = None
+        self.calculatedRentalLabel = None
         self.framesList = {}
         self.logFileDestination = StringVar()
+        self.carTypeDropDown = StringVar()
+        self.resultString = StringVar()
+        self.carTypeList = ['Type1', 'Type2']
 
         self.master.title('Rental Calculator')
         self.createUIVariables()
@@ -35,6 +43,8 @@ class RentalCalculatorGUI:
 
     def createUIVariables(self):
         self.logFileDestination.set(self.logFileName)
+        self.carTypeDropDown.set('')
+        self.resultString.set('RESULT')
 
     def createWidgets(self):
         self.logger.info('Starting UI.')
@@ -58,8 +68,41 @@ class RentalCalculatorGUI:
         )
         self.logFileLabel.grid(row=1, padx=10, pady=10)
 
-        self.optionsSelectGroup = ttk.LabelFrame(self.userFrame, text='Select Appropriate Options')
+        # Select options.
+        self.optionsSelectGroup = ttk.Labelframe(
+            self.userFrame, text='Select Appropriate Options'
+        )
         self.optionsSelectGroup.grid(row=1)
+        self.carTypeLabel = Label(self.optionsSelectGroup, text='Car Type:')
+        self.carTypeLabel.grid(row=0, column=0, padx=10, pady=10)
+        font = ('TkDefaultFont', '12')
+        self.carTypeCombobox = ttk.Combobox(
+            self.optionsSelectGroup,
+            state='readonly',
+            font=font,
+            width=45,
+            textvariable=self.carTypeDropDown,
+        )
+        self.carTypeCombobox.grid(row=0, column=1, padx=10, pady=10)
+        self.carTypeCombobox['values'] = self.carTypeList
+
+        self.calculateRentalButton = ttk.Button(
+            self.userFrame,
+            text='Calculate Rental',
+            command=self.calculateRentalButtonClick,
+        )
+        self.calculateRentalButton.grid(row=10)
+
+        self.calculatedRentalGrp = ttk.Labelframe(self.userFrame, text='Calculated Rental')
+        self.calculatedRentalGrp.grid(row=12)
+        self.calculatedRentalLabel = Label(self.calculatedRentalGrp, text=self.resultString.get())
+        self.calculatedRentalLabel.grid(row=0)
+        self.disable(self.calculatedRentalGrp)
+        # self.calculatedRentalGrp.grid_remove()
+
+    def calculateRentalButtonClick(self):
+        print('---', self.carTypeDropDown.get())
+        self.enable(self.calculatedRentalGrp)
 
     def finalizeUI(self):
         """
@@ -80,3 +123,13 @@ class RentalCalculatorGUI:
         """
         for child in inputFrame.winfo_children():
             child.grid_configure(padx=10, pady=10)
+
+    @staticmethod
+    def enable(frame):
+        for child in frame.winfo_children():
+            child.grid()
+
+    @staticmethod
+    def disable(frame):
+        for child in frame.winfo_children():
+            child.grid_remove()
