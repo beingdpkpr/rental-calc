@@ -98,7 +98,6 @@ class RentalCalculatorGUI:
         self.calculatedRentalLabel = Label(self.calculatedRentalGrp, text=self.resultString.get())
         self.calculatedRentalLabel.grid(row=0)
         self.disable(self.calculatedRentalGrp)
-        # self.calculatedRentalGrp.grid_remove()
 
     def calculateRentalButtonClick(self):
         print('---', self.carTypeDropDown.get())
